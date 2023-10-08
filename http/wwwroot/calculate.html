@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+        color: #5cbedf5e;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>在线计算器</h1>
+    <form method="POST" action="/calculate">
+      <input type="text" name="expression" placeholder="请输入表达式">
+      <button type="submit">Calculate</button>
+    </form>
+    <script>
+      // 获取输入框元素
+      var input = document.querySelector('input[name="expression"]');
+      // 监听输入框的输入事件
+      input.addEventListener('input', function() {
+        // 如果输入框中有内容，就将提示文本隐藏
+        if (input.value.length > 0) {
+          input.removeAttribute('placeholder');
+        }
+        // 否则，就将提示文本显示出来
+        else {
+          input.setAttribute('placeholder', '请输入表达式');
+        }
+      });
+    </script>
+  </body>
+</html>
