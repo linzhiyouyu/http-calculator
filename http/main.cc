@@ -2,6 +2,11 @@
 
 
 #define WWWROOT "./wwwroot/"
+#define HOST "127.0.0.1"
+#define PORT 3306
+#define USER "root"
+#define PASSWARD "#Yaz546040011213"
+#define DBNAME "calculate_db"
 
 std::string request_str(const HttpRequest& req) {
     std::stringstream ss;
@@ -93,6 +98,11 @@ void Calculate(const HttpRequest& req, HttpResponse* resp) {
         result = x / y;
     }
     std::cout << "result = " << result << std::endl;
+    MYSQL* mysql = mysql_util::mysql_create(HOST, USER, PASSWARD, DBNAME, PORT);
+    char buffer[1024] = {0};
+    snprintf(buffer, sizeof(buffer) - 1, "insert into CalculatorHistory (operand1, operand2, operator, result) values (%f, %f, '%c', %f);", x, y, op, result);
+    bool ret = mysql_util::mysql_exec(mysql, buffer);
+    mysql_util::mysql_destroy(mysql);
     // 构造html页面
     std::stringstream ss;
     ss << "<html>";

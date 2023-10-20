@@ -10,6 +10,7 @@
 #include<unistd.h>
 #include<cstdio>
 #include<sys/stat.h>
+#include<mysql/mysql.h>
 class Utils
 {
 public:
@@ -186,6 +187,43 @@ public:
     }
 };
 
+class mysql_util
+{
+public:
+    static MYSQL* mysql_create(const std::string& host, const std::string& username,
+    const std::string& password, const std::string& dbname, uint16_t port = 3306) {
+        MYSQL* mysql = ::mysql_init(nullptr);
+        if(mysql == nullptr) {
+            std::cerr << "mysql_init failed" << std::endl;
+            return nullptr;
+        }
+        if(::mysql_real_connect(mysql, host.c_str(), username.c_str(), password.c_str(), dbname.c_str(), port, nullptr, 0) == nullptr) {
+            std::cerr << "mysql_real_connect failed" << std::endl;
+            ::mysql_close(mysql);
+            return nullptr;
+        }
+        //设置客户端字符集
+        if(::mysql_set_character_set(mysql, "utf8") != 0) {
+            std::cerr << "mysql_set_character_set failed" << std::endl;
+            ::mysql_close(mysql);
+            return nullptr;
+        }
+        return mysql;
+    }
+    static bool mysql_exec(MYSQL* mysql, const std::string& sql) {
+        int ret = ::mysql_query(mysql, sql.c_str());
+        if(ret != 0) {
+            std::cerr << "mysql_query failed: " << sql << std::endl;
+            return false;
+        }
+        return true;
+    }
+    static void mysql_destroy(MYSQL* mysql) {
+        if(mysql != nullptr) {
+            ::mysql_close(mysql);
+        }
+    }
+};
 
 
 #endif // __UTILS_HPP__
